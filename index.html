@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Wave — Musikmu, Ombakmu</title>
+  <meta name="description" content="Wave — aplikasi musik PWA dengan desain deep ocean" />
+  <meta name="theme-color" content="#04121f" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+
+  <!-- ===== AUTH ===== -->
+  <div id="authView" class="auth-view hidden">
+    <div class="auth-tint" id="authTint"></div>
+    <div class="auth-bg-wave w1"></div>
+    <div class="auth-bg-wave w2"></div>
+    <div class="auth-card glass">
+      <div class="auth-logo">
+        <img src="./icons/icon-192.png" alt="Wave" />
+        <h1>Wave</h1>
+        <p>Musikmu, ombakmu.</p>
+      </div>
+      <form id="authForm" autocomplete="on">
+        <div class="field">
+          <label for="authEmail">Email</label>
+          <input type="email" id="authEmail" required placeholder="kamu@email.com" />
+        </div>
+        <div class="field">
+          <label for="authPass">Password</label>
+          <input type="password" id="authPass" required minlength="6" placeholder="Minimal 6 karakter" />
+        </div>
+        <button type="submit" id="authSubmit" class="btn-primary">Masuk</button>
+      </form>
+      <p class="auth-switch">
+        <span id="authSwitchText">Belum punya akun?</span>
+        <button type="button" id="authSwitchBtn" class="link-btn">Daftar</button>
+      </p>
+      <p id="authError" class="auth-error hidden"></p>
+      <div class="auth-hint" aria-hidden="true">
+        <div class="hint-pointer">
+          <svg viewBox="0 0 24 24" width="30" height="30"><path fill="currentColor" d="M9 11.24V7.5C9 6.12 10.12 5 11.5 5S14 6.12 14 7.5v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.03-.24-.03-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.44 1.06.44h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.2 0-.62-.38-1.16-.91-1.38z"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== APP ===== -->
+  <div id="appView" class="app hidden">
+
+    <!-- Latar animasi ambient -->
+    <div class="bg-decor" aria-hidden="true">
+      <div class="bg-blob b1"></div>
+      <div class="bg-blob b2"></div>
+      <div class="bg-blob b3"></div>
+    </div>
+
+    <!-- Sidebar (desktop) -->
+    <aside class="sidebar">
+      <div class="side-logo">
+        <img src="./icons/icon-192.png" alt="" />
+        <span>Wave</span>
+      </div>
+      <nav class="side-nav">
+        <button class="side-link active" data-nav="home">
+          <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21h-6v-6h-6v6H3z"/></svg>
+          Beranda
+        </button>
+        <button class="side-link" data-nav="playlists">
+          <svg viewBox="0 0 24 24"><path d="M4 6h11v2H4zm0 4h11v2H4zm0 4h7v2H4zm14-6v7.1a3 3 0 1 0 2 2.8V6z"/></svg>
+          Playlist
+        </button>
+      </nav>
+      <div class="side-playlists">
+        <div class="side-label">Playlist Kamu</div>
+        <div id="sidebarPlaylists"></div>
+      </div>
+      <div class="side-footer">
+        <button id="logoutBtn" class="link-btn">Keluar</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+      <!-- Beranda -->
+      <section id="homeView" class="view">
+        <header class="view-head">
+          <h2>Beranda</h2>
+          <div class="head-actions">
+            <button id="logoutBtnM1" class="icon-btn logout-mobile" aria-label="Keluar">
+              <svg viewBox="0 0 24 24"><path d="M10.09 15.59 11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5a2 2 0 0 0-2 2v4h2V5h14v14H5v-4H3v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/></svg>
+            </button>
+            <button id="uploadBtn" class="btn-accent">
+              <svg viewBox="0 0 24 24"><path d="M12 3v10.6l3.3-3.3 1.4 1.4L12 16.4l-4.7-4.7 1.4-1.4L12 13.6V3zM5 19h14v2H5z"/></svg>
+              Tambah Lagu
+            </button>
+          </div>
+          <input type="file" id="fileInput" accept="audio/*" multiple hidden />
+        </header>
+        <div id="uploadStatus" class="upload-status hidden"></div>
+        <div id="songList" class="song-list"></div>
+        <div id="emptyLibrary" class="empty hidden">
+          <div class="empty-art">🌊</div>
+          <h3>Belum ada lagu</h3>
+          <p>Tambahkan file mp3 dari perangkatmu untuk mulai mendengarkan.</p>
+        </div>
+      </section>
+
+      <!-- Daftar Playlist -->
+      <section id="playlistsView" class="view hidden">
+        <header class="view-head">
+          <h2>Playlist</h2>
+          <div class="head-actions">
+            <button id="logoutBtnM2" class="icon-btn logout-mobile" aria-label="Keluar">
+              <svg viewBox="0 0 24 24"><path d="M10.09 15.59 11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5a2 2 0 0 0-2 2v4h2V5h14v14H5v-4H3v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/></svg>
+            </button>
+            <button id="newPlaylistBtn" class="btn-accent">
+              <svg viewBox="0 0 24 24"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>
+              Baru
+            </button>
+          </div>
+        </header>
+        <div id="playlistGrid" class="pl-grid"></div>
+        <div id="emptyPlaylists" class="empty hidden">
+          <div class="empty-art">🎶</div>
+          <h3>Belum ada playlist</h3>
+          <p>Buat playlist dan kumpulkan lagu favoritmu.</p>
+        </div>
+      </section>
+
+      <!-- Detail Playlist -->
+      <section id="playlistDetail" class="view hidden">
+        <button id="plBack" class="back-btn">
+          <svg viewBox="0 0 24 24"><path d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z"/></svg>
+          Kembali
+        </button>
+        <div class="pl-hero glass">
+          <div class="pl-cover" id="plCover"></div>
+          <div class="pl-meta">
+            <span class="pl-kicker">Playlist</span>
+            <h2 id="plName"></h2>
+            <span id="plCount" class="pl-count"></span>
+            <div class="pl-actions">
+              <button id="plPlayAll" class="btn-accent">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                Putar Semua
+              </button>
+              <button id="plDelete" class="btn-ghost-danger">Hapus</button>
+            </div>
+          </div>
+        </div>
+        <div id="plSongList" class="song-list"></div>
+        <div id="plEmpty" class="empty hidden">
+          <div class="empty-art">💧</div>
+          <h3>Playlist masih kosong</h3>
+          <p>Tambahkan lagu dari menu ⋮ di Beranda.</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Mini Player -->
+    <div id="miniPlayer" class="mini-player glass hidden">
+      <img id="mpCover" class="mp-cover" alt="" />
+      <div class="mp-info">
+        <div id="mpTitle" class="mp-title"></div>
+        <div id="mpArtist" class="mp-artist"></div>
+      </div>
+      <button id="mpPlay" class="icon-btn mp-play">
+        <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+      </button>
+      <button id="mpNext" class="icon-btn">
+        <svg viewBox="0 0 24 24"><path d="M6 5v14l8-7zM16 5h2v14h-2z"/></svg>
+      </button>
+      <div class="mp-progress"><div id="mpProgress"></div></div>
+    </div>
+
+    <!-- Bottom Nav (mobile) -->
+    <nav class="bottom-nav">
+      <button class="nav-link active" data-nav="home">
+        <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21h-6v-6h-6v6H3z"/></svg>
+        <span>Beranda</span>
+      </button>
+      <button class="nav-link" data-nav="playlists">
+        <svg viewBox="0 0 24 24"><path d="M4 6h11v2H4zm0 4h11v2H4zm0 4h7v2H4zm14-6v7.1a3 3 0 1 0 2 2.8V6z"/></svg>
+        <span>Playlist</span>
+      </button>
+    </nav>
+
+    <!-- Now Playing overlay -->
+    <div id="nowPlaying" class="np hidden">
+      <div class="np-inner">
+        <div class="np-top">
+          <button id="npClose" class="icon-btn">
+            <svg viewBox="0 0 24 24"><path d="M12 19.6 4.4 12 12 4.4 13.4 5.8 8.2 11h11.6v2H8.2l5.2 5.2z" transform="rotate(90 12 12)"/></svg>
+          </button>
+          <span class="np-label">Sedang Diputar</span>
+          <div class="np-top-actions">
+            <button id="npSleepBtn" class="icon-btn small" aria-label="Sleep timer">
+              <svg viewBox="0 0 24 24"><path d="M17.75 14.2A7.2 7.2 0 0 1 9.8 6.25c0-.62.11-1.22.28-1.8A8.25 8.25 0 1 0 19.55 13.9c-.57.17-1.18.28-1.8.28z"/></svg>
+              <span id="sleepBadge" class="sleep-badge hidden"></span>
+            </button>
+            <button id="npQueueBtn" class="icon-btn">
+            <svg viewBox="0 0 24 24"><path d="M4 6h12v2H4zm0 4h12v2H4zm0 4h8v2H4zm14-6v7.1a3 3 0 1 0 2 2.8V6z"/></svg>
+          </button>
+          </div>
+        </div>
+        <div class="np-cover-wrap">
+          <img id="npCover" class="np-cover" alt="" />
+          <div class="np-glow"></div>
+        </div>
+        <div class="np-info">
+          <div id="npTitle" class="np-title"></div>
+          <div id="npArtist" class="np-artist"></div>
+        </div>
+        <canvas id="npViz" class="np-viz" aria-hidden="true"></canvas>
+        <div class="np-seek">
+          <span id="npCur">0:00</span>
+          <input type="range" id="seekBar" min="0" max="100" value="0" step="0.1" />
+          <span id="npDur">0:00</span>
+        </div>
+        <div class="np-controls">
+          <button id="btnShuffle" class="icon-btn small">
+            <svg viewBox="0 0 24 24"><path d="M17 3h4v4h-2V6.4l-4.6 4.6-1.4-1.4L17.6 5H17zM3 5h4.9l2.5 2.5-1.4 1.4L7.1 7H3zm11.4 8.6 1.4-1.4L20.6 17H21v4h-4v-2h.6zM3 17h4.1l9-9H21V5h-5.9l-9 9H3z"/></svg>
+          </button>
+          <button id="btnPrev" class="icon-btn big">
+            <svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zm3.5 7L18 5v14z"/></svg>
+          </button>
+          <button id="btnPlay" class="play-fab">
+            <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+          </button>
+          <button id="btnNext" class="icon-btn big">
+            <svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM6 5l8.5 7L6 19z"/></svg>
+          </button>
+          <button id="btnRepeat" class="icon-btn small">
+            <svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2z"/></svg>
+            <span id="repeatOne" class="badge-one hidden">1</span>
+          </button>
+        </div>
+        <div id="npQueue" class="np-queue glass hidden">
+          <div class="np-queue-head">
+            <span>Antrean</span>
+            <button id="queueClose" class="link-btn">Tutup</button>
+          </div>
+          <div id="queueList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modalRoot"></div>
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <audio id="audio"></audio>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsmediatags@3.9.7/dist/jsmediatags.min.js"></script>
+  <script src="./js/config.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
