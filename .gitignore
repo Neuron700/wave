@@ -1,0 +1,8 @@
+# Lokal Supabase credentials — copy js/config.example.js instead
+js/config.js
+
+# Local/tooling noise
+*.log
+.DS_Store
+Thumbs.db
+node_modules/

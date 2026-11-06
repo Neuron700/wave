@@ -73,7 +73,13 @@ Kalau berhasil akan muncul pesan `Success. No rows returned`.
 
 1. Menu kiri → ⚙️ **Project Settings** → **API**.
 2. Salin **Project URL** dan **anon public key**.
-3. Buka file `js/config.js`, isi seperti ini:
+3. Buat/isi file `js/config.js` dari template:
+
+```powershell
+copy js\config.example.js js\config.js
+```
+
+`js/config.js` **tidak di-commit** (di-ignore Git). Isi dengan Project URL dan anon public key seperti ini:
 
 ```js
 window.WAVE_CONFIG = {
@@ -81,6 +87,8 @@ window.WAVE_CONFIG = {
   SUPABASE_ANON_KEY: 'eyJhbGciOi... (anon key kamu)'
 };
 ```
+
+> Anon/publishable key memang dipakai di browser, tapi **jangan pernah** commit `service_role` / `sb_secret_` key. RLS harus aktif di semua tabel yang diakses frontend.
 
 ## 5. Jalankan Aplikasi
 
@@ -133,7 +141,8 @@ wave/
 ├── manifest.webmanifest # Metadata PWA
 ├── sw.js               # Service worker (cache offline shell)
 ├── css/style.css       # Tema deep ocean
-├── js/config.js        # ⬅️ Isi kredensial Supabase di sini
+├── js/config.example.js # Template konfigurasi (salin ke js/config.js)
+├── js/config.js        # ⬅️ Lokal only; isi kredensial Supabase, tidak di-commit
 ├── js/app.js           # Logika aplikasi
 └── icons/              # Ikon PWA
 ```
